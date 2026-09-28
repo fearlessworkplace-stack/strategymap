@@ -1,0 +1,686 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fearless Workplace — Strategy 30</title>
+<style>
+:root{
+  --bg:#081015; --bg2:#0d1920; --panel:#0f1d24; --line:#28404a; --ink:#f5fbfd; --muted:#a6bbc3;
+  --teal:#2F6E83; --cyan:#6fd3ef; --violet:#8f6dff; --amber:#e6b35a; --coral:#ef7e73; --green:#69d1a2;
+  --shadow:0 20px 60px rgba(0,0,0,.30);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--ink);
+  background:
+    radial-gradient(circle at 10% 0%, rgba(111,211,239,.12), transparent 28%),
+    radial-gradient(circle at 96% 14%, rgba(143,109,255,.10), transparent 26%),
+    radial-gradient(circle at 88% 76%, rgba(239,126,115,.10), transparent 24%),
+    linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+  line-height:1.45;
+}
+button,input,textarea{font:inherit} button{cursor:pointer}
+.topbar{position:sticky;top:0;z-index:20;backdrop-filter:blur(12px);background:rgba(8,16,21,.86);border-bottom:1px solid rgba(111,211,239,.12)}
+.container{width:min(1120px,calc(100% - 28px));margin:auto}
+.topbar .container{display:flex;justify-content:space-between;align-items:center;padding:14px 0}
+.brand{font-size:13px;font-weight:900;letter-spacing:.12em}
+.series{font-size:12px;color:var(--muted)}
+.wrap{padding:24px 0 48px}
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;align-items:end;margin-bottom:18px}
+.kicker{font-size:12px;color:var(--cyan);text-transform:uppercase;letter-spacing:.14em;font-weight:900}
+h1,h2,h3,h4{margin:0;line-height:1.06}
+h1{font-size:clamp(42px,7vw,78px);letter-spacing:-.04em}
+h2{font-size:clamp(30px,4.6vw,46px);letter-spacing:-.03em}
+.hero-copy,.lede{color:var(--muted);font-size:17px;max-width:760px;margin-top:12px}
+.framework,.card,.review-card,.statement,.scorebox{
+  border:1px solid var(--line); border-radius:20px; box-shadow:var(--shadow);
+}
+.framework{padding:18px;background:linear-gradient(145deg, rgba(18,37,46,.95), rgba(11,24,32,.95))}
+.framework-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+.framework-chip{padding:14px 10px;border-radius:14px;background:#0d1820;border:1px solid rgba(255,255,255,.06);text-align:center}
+.framework-chip b{display:block;font-size:18px}
+.framework-chip:nth-child(1) b{color:var(--cyan)} .framework-chip:nth-child(2) b{color:var(--violet)} .framework-chip:nth-child(3) b{color:var(--amber)} .framework-chip:nth-child(4) b{color:var(--coral)}
+.framework-chip span{display:block;font-size:11px;color:var(--muted)}
+.panel{background:linear-gradient(180deg, rgba(13,27,34,.98), rgba(9,17,22,.98));border:1px solid var(--line);border-radius:24px;overflow:hidden;box-shadow:var(--shadow)}
+.tabs{display:flex;flex-wrap:wrap;gap:10px;padding:18px 20px;border-bottom:1px solid var(--line);background:#091319}
+.tab{
+  display:flex;align-items:center;gap:10px;min-width:104px;padding:10px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.08);
+  background:#101a21;color:#d4e3e8
+}
+.tab .num{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:900;color:#071015}
+.tab .txt{font-size:13px;font-weight:800}
+.tab[data-step="intro"] .num{background:var(--teal)}
+.tab[data-step="ends"] .num{background:var(--cyan)}
+.tab[data-step="ways"] .num{background:var(--violet)}
+.tab[data-step="means"] .num{background:var(--amber)}
+.tab[data-step="risk"] .num{background:var(--coral)}
+.tab[data-step="review"] .num{background:var(--green)}
+.tab.active{box-shadow:0 0 0 2px rgba(255,255,255,.05) inset}
+.tab[data-step="intro"].active{background:linear-gradient(145deg, rgba(47,110,131,.35), rgba(47,110,131,.14))}
+.tab[data-step="ends"].active{background:linear-gradient(145deg, rgba(111,211,239,.24), rgba(111,211,239,.09))}
+.tab[data-step="ways"].active{background:linear-gradient(145deg, rgba(143,109,255,.24), rgba(143,109,255,.08))}
+.tab[data-step="means"].active{background:linear-gradient(145deg, rgba(230,179,90,.24), rgba(230,179,90,.08))}
+.tab[data-step="risk"].active{background:linear-gradient(145deg, rgba(239,126,115,.24), rgba(239,126,115,.08))}
+.tab[data-step="review"].active{background:linear-gradient(145deg, rgba(105,209,162,.24), rgba(105,209,162,.08))}
+.screen{display:none;padding:30px}
+.screen.active{display:block}
+.eyebrow{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.14em;color:var(--cyan);margin-bottom:8px}
+.intro-grid,.review-grid,.review-top{display:grid;gap:16px}
+.intro-grid{grid-template-columns:1fr 1fr;margin-top:22px}
+.card{padding:18px;background:linear-gradient(145deg, rgba(18,37,46,.95), rgba(11,24,32,.95))}
+.card.accent2{background:linear-gradient(145deg, rgba(47,34,77,.82), rgba(11,24,32,.95))}
+.bigquote{font-size:24px;font-weight:900;letter-spacing:-.02em;line-height:1.14}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:22px}
+.option{
+  position:relative;padding:16px;border-radius:18px;border:1px solid #27404a;min-height:122px;
+  background:linear-gradient(145deg, rgba(14,27,34,.96), rgba(12,22,28,.96))
+}
+.option input{position:absolute;opacity:0;pointer-events:none}
+.option .title{font-size:16px;font-weight:900;padding-right:28px}
+.option .desc{font-size:13px;color:var(--muted);margin-top:6px}
+.option.selected{box-shadow:0 0 0 2px rgba(255,255,255,.05) inset}
+.option.selected:after{content:"✓";position:absolute;top:12px;right:12px;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:900;color:#071015}
+.option[data-accent="cyan"].selected{border-color:var(--cyan);background:linear-gradient(145deg, rgba(63,132,151,.30), rgba(12,22,28,.96))}
+.option[data-accent="cyan"].selected:after{background:var(--cyan)}
+.option[data-accent="violet"].selected{border-color:var(--violet);background:linear-gradient(145deg, rgba(86,70,140,.28), rgba(12,22,28,.96))}
+.option[data-accent="violet"].selected:after{background:var(--violet)}
+.option[data-accent="amber"].selected{border-color:var(--amber);background:linear-gradient(145deg, rgba(120,92,35,.28), rgba(12,22,28,.96))}
+.option[data-accent="amber"].selected:after{background:var(--amber)}
+.option[data-accent="coral"].selected{border-color:var(--coral);background:linear-gradient(145deg, rgba(126,63,56,.28), rgba(12,22,28,.96))}
+.option[data-accent="coral"].selected:after{background:var(--coral)}
+.tag{display:inline-block;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:900;letter-spacing:.09em;text-transform:uppercase;background:rgba(230,179,90,.16);color:#f2cf8b;margin-bottom:8px}
+.field{margin-top:22px}
+.field label{display:block;font-weight:900;margin-bottom:8px}
+input[type=text],textarea{
+  width:100%;padding:13px 14px;border-radius:14px;border:1px solid #29424c;background:#0b1419;color:var(--ink);outline:none
+}
+textarea{min-height:92px;resize:vertical}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+.btn{border:0;border-radius:13px;padding:12px 16px;font-weight:900}
+.btn-primary{background:linear-gradient(135deg, var(--teal), var(--cyan));color:#071015}
+.btn-secondary{background:#16232a;color:#d9e7ec;border:1px solid #314955}
+.btn-ghost{background:transparent;color:#ccecf5}
+.warning{display:none;font-size:13px;font-weight:800;color:#ffc9c4;margin-top:12px}
+.review-top{grid-template-columns:1.08fr .92fr;margin-top:22px}
+.statement,.scorebox,.review-card{padding:18px;background:linear-gradient(145deg, rgba(18,37,46,.95), rgba(11,24,32,.95))}
+.statement p{font-size:17px;margin:0}
+.meter{height:10px;border-radius:999px;overflow:hidden;background:#111c22;border:1px solid #243b45;margin-top:10px}
+.meter span{display:block;height:100%;background:linear-gradient(90deg, var(--teal), var(--cyan), var(--green))}
+.meterlabel{font-size:13px;color:var(--muted);margin-top:8px}
+.review-grid{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:16px}
+.review-card p{margin:0;color:#dce7eb}
+.minicaps{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:8px}
+.pills{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.pill{padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800;background:#13222a;border:1px solid #29404b;color:#cfeaf2}
+.pill.cyan{background:rgba(111,211,239,.10);color:var(--cyan);border-color:rgba(111,211,239,.20)}
+.pill.violet{background:rgba(143,109,255,.10);color:#c6b9ff;border-color:rgba(143,109,255,.20)}
+.pill.amber{background:rgba(230,179,90,.10);color:#f2cf8b;border-color:rgba(230,179,90,.20)}
+.pill.green{background:rgba(105,209,162,.10);color:#b4edd2;border-color:rgba(105,209,162,.20)}
+.pill.coral{background:rgba(239,126,115,.10);color:#ffbab3;border-color:rgba(239,126,115,.20)}
+.primary-choice{border:1px solid rgba(111,211,239,.22);background:rgba(111,211,239,.08);color:#d8f6fd;border-radius:999px;padding:8px 11px;font-size:12px;font-weight:900}.primary-choice.active{background:var(--cyan);color:#071015;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(111,211,239,.10)}
+.callout{border-left:4px solid var(--amber);padding-left:12px;margin-top:10px}
+.simplelist{display:grid;gap:10px;margin-top:10px}
+.simpleitem{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start;padding-top:10px;border-top:1px solid #1f323a}
+.simpleitem:first-child{border-top:0;padding-top:0}
+.simpleitem .num{width:28px;height:28px;border-radius:10px;display:grid;place-items:center;font-size:12px;font-weight:900;color:#071015;background:var(--cyan)}
+.simpleitem h4{font-size:15px;margin:0 0 4px}
+.simpleitem p{font-size:13px;color:var(--muted);margin:0}
+details{margin-top:10px;border:1px solid #243a44;border-radius:14px;padding:10px 12px;background:#0d171d}
+summary{cursor:pointer;font-weight:900}
+.footer{display:flex;justify-content:space-between;gap:16px;color:#748a93;font-size:11px;padding-bottom:24px}
+@media(max-width:900px){.hero,.intro-grid,.review-top,.review-grid{grid-template-columns:1fr}}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.screen{padding:22px 16px}.framework-grid{grid-template-columns:1fr 1fr}.tab{min-width:calc(50% - 4px)}}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="container"><div class="brand">FEARLESS WORKPLACE</div><div class="series">Toxic Workplace Strategy Challenge · Strategy 30</div></div></header>
+<div class="container wrap">
+  <section class="hero">
+    <div><div class="kicker">Strategy 30</div><h1>Build Your Strategy</h1><p class="hero-copy">This tool helps you build a simple plan. First decide what you want. Then choose how you might get there, what you can use, and what could get in the way.</p></div>
+    <div class="framework"><div class="eyebrow" style="margin:0;color:var(--muted)">Framework</div><div class="framework-grid"><div class="framework-chip"><b>Ends</b><span>What you want</span></div><div class="framework-chip"><b>Ways</b><span>How you might get it</span></div><div class="framework-chip"><b>Means</b><span>What you can use</span></div><div class="framework-chip"><b>Risk</b><span>What could backfire</span></div></div></div>
+  </section>
+
+  <section class="panel">
+    <nav class="tabs">
+      <button class="tab active" data-nav="intro" data-step="intro"><span class="num">0</span><span class="txt">Start</span></button>
+      <button class="tab" data-nav="ends" data-step="ends"><span class="num">1</span><span class="txt">Ends</span></button>
+      <button class="tab" data-nav="ways" data-step="ways"><span class="num">2</span><span class="txt">Ways</span></button>
+      <button class="tab" data-nav="means" data-step="means"><span class="num">3</span><span class="txt">Means</span></button>
+      <button class="tab" data-nav="risk" data-step="risk"><span class="num">4</span><span class="txt">Risk</span></button>
+      <button class="tab" data-nav="review" data-step="review"><span class="num">5</span><span class="txt">Plan</span></button>
+    </nav>
+
+    <section class="screen active" id="intro">
+      <div class="eyebrow">Start here</div>
+      <h2>This should feel simple.</h2>
+      <p class="lede">The last screen will not dump everything back at you. It will give you a plain-language read on your plan, the main gap, the best next move, and what to watch.</p>
+      <div class="intro-grid">
+        <div class="card"><div class="bigquote">A strategy is not “whatever I feel like doing after a bad meeting.”</div><p class="lede" style="font-size:13px">A strategy connects your goal, your options, your resources, and your risk.</p></div>
+        <div class="card accent2"><div class="minicaps">You will leave with</div><ul style="margin:0 0 0 18px;padding:0"><li>A simple read on your plan</li><li>The first thing to do next</li><li>The biggest gap to build</li><li>A short watch-out list</li></ul></div>
+      </div>
+      <div class="actions"><button class="btn btn-primary" data-next="ends">Start</button><button class="btn btn-secondary" id="resumeBtn" style="display:none">Resume saved draft</button></div>
+    </section>
+
+    <section class="screen" id="ends">
+      <div class="eyebrow">Ends</div><h2>What are you trying to make happen?</h2><p class="lede">Pick the result you want. “Fix this place” is too big. Keep it specific.</p>
+      <div class="grid" data-group="ends">
+        <label class="option" data-accent="cyan"><input type="checkbox" name="end" data-key="protect" value="Protect my job while I figure out what comes next"><div class="title">Protect my job while I figure out what comes next</div><div class="desc">Buy time and avoid making things worse while you get clearer.</div></label>
+        <label class="option" data-accent="cyan"><input type="checkbox" name="end" data-key="behavior" value="Stop or change a specific behavior"><div class="title">Stop or change a specific behavior</div><div class="desc">Focus on one pattern, one behavior, or one working condition.</div></label>
+        <label class="option" data-accent="cyan"><input type="checkbox" name="end" data-key="reputation" value="Repair or protect my reputation"><div class="title">Repair or protect my reputation</div><div class="desc">Keep one person or one conflict from becoming the whole story about you.</div></label>
+        <label class="option" data-accent="cyan"><input type="checkbox" name="end" data-key="decision" value="Get a decision changed or a problem fixed"><div class="title">Get a decision changed or a problem fixed</div><div class="desc">You want a specific result someone can actually act on.</div></label>
+        <label class="option" data-accent="cyan"><input type="checkbox" name="end" data-key="advance" value="Put myself in a better position inside the organization"><div class="title">Put myself in a better position inside the organization</div><div class="desc">Get more visibility, support, skills, or access where you are.</div></label>
+        <label class="option" data-accent="cyan"><input type="checkbox" name="end" data-key="escalate" value="Build enough support and proof to escalate"><div class="title">Build enough support and proof to escalate</div><div class="desc">Get the case strong enough before taking it higher.</div></label>
+        <label class="option" data-accent="cyan"><input type="checkbox" name="end" data-key="milestone" value="Stay long enough to reach a key milestone"><div class="title">Stay long enough to reach a key milestone</div><div class="desc">Hold on until a date, benefit, credential, or financial target.</div></label>
+        <label class="option" data-accent="cyan"><input type="checkbox" name="end" data-key="exit" value="Get ready to leave on stronger terms"><div class="title">Get ready to leave on stronger terms</div><div class="desc">Build more choice before you go.</div></label>
+      </div>
+      <div class="field" id="primaryEndField">
+        <label>Which goal is the main one right now?</label>
+        <div class="hint">This is the goal that should drive the strategy. The others can still matter, but they become supporting goals.</div>
+        <div class="pills" id="primaryEndChoices"></div>
+      </div>
+      <div class="field"><label for="customEnd">Or add another goal</label><input id="customEnd" type="text" placeholder="Example: Move to another team without damaging my reputation"></div>
+      <div class="field"><label for="successLooks">What would success look like?</label><textarea id="successLooks" placeholder="Describe what you would be able to see, point to, or verify if this worked."></textarea></div>
+      <div class="warning" id="endWarn">Choose a goal or write your own.</div>
+      <div class="actions"><button class="btn btn-secondary" data-back="intro">Back</button><button class="btn btn-primary" id="endsNext">Next</button></div>
+    </section>
+
+    <section class="screen" id="ways">
+      <div class="eyebrow">Ways</div><h2>How could you get there?</h2><p class="lede">Pick the routes that make the most sense. More is not better.</p>
+      <div class="grid" data-group="ways">
+        <label class="option" data-accent="violet"><input type="checkbox" data-key="regulate" value="Pause and respond more deliberately"><div class="title">Pause and respond more deliberately</div><div class="desc">Create enough space to think before you react.</div></label>
+        <label class="option" data-accent="violet"><input type="checkbox" data-key="boundary" value="Set or reinforce a boundary"><div class="title">Set or reinforce a boundary</div><div class="desc">Be clearer about what you will and will not do.</div></label>
+        <label class="option" data-accent="violet"><input type="checkbox" data-key="conversation" value="Have the conversation"><div class="title">Have the conversation</div><div class="desc">Address the issue directly.</div></label>
+        <label class="option" data-accent="violet"><input type="checkbox" data-key="manageup" value="Manage up strategically"><div class="title">Manage up strategically</div><div class="desc">Adjust how you work with the person who has more power.</div></label>
+        <label class="option" data-accent="violet"><input type="checkbox" data-key="document" value="Create or strengthen documentation"><div class="title">Create or strengthen documentation</div><div class="desc">Build the factual record.</div></label>
+        <label class="option" data-accent="violet"><input type="checkbox" data-key="repway" value="Protect my reputation and make my work more visible"><div class="title">Protect your reputation</div><div class="desc">Make sure your work speaks louder than the story about you.</div></label>
+        <label class="option" data-accent="violet"><input type="checkbox" data-key="allies" value="Build allies and stronger relationships"><div class="title">Build allies</div><div class="desc">Get support from people who can help.</div></label>
+        <label class="option" data-accent="violet"><input type="checkbox" data-key="power" value="Map the power and take a better route"><div class="title">Map the power</div><div class="desc">Figure out who really influences the outcome.</div></label>
+        <label class="option" data-accent="violet"><input type="checkbox" data-key="formal" value="Use a formal process or escalate"><div class="title">Use a formal process or escalate</div><div class="desc">Take it to someone or something with authority.</div></label>
+        <label class="option" data-accent="violet"><input type="checkbox" data-key="internal" value="Build better options inside the organization"><div class="title">Build better internal options</div><div class="desc">Create more opportunity where you are.</div></label>
+        <label class="option" data-accent="violet"><input type="checkbox" data-key="external" value="Build better options outside the organization"><div class="title">Build better external options</div><div class="desc">Reduce your dependence on this workplace.</div></label>
+      </div>
+      <div class="field"><label for="customWay">Another route</label><input id="customWay" type="text" placeholder="Add another way you might pursue this"></div>
+      <div class="field"><label for="firstAction">What is the first real action?</label><textarea id="firstAction" placeholder="Keep it small and concrete."></textarea></div>
+      <div class="warning" id="waysWarn">Choose at least one route or write your own.</div>
+      <div class="actions"><button class="btn btn-secondary" data-back="ends">Back</button><button class="btn btn-primary" id="waysNext">Next</button></div>
+    </section>
+
+    <section class="screen" id="means">
+      <div class="eyebrow">Means</div><h2>What can you use?</h2><p class="lede">These are the things that can protect you, help you, or give you more leverage.</p>
+      <div class="grid" data-group="means">
+        <label class="option" data-accent="amber"><input type="checkbox" data-key="documentation" value="Protective documentation"><div class="tag">Protection</div><div class="title">Protective documentation</div><div class="desc">Emails, messages, notes, calendar entries, and other factual records.</div></label>
+        <label class="option" data-accent="amber"><input type="checkbox" data-key="competence" value="Evidence of my competence and results"><div class="tag">Protection + leverage</div><div class="title">Evidence of your competence and results</div><div class="desc">Wins, work samples, feedback, data, results, and a wins file.</div></label>
+        <label class="option" data-accent="amber"><input type="checkbox" data-key="policies" value="Policies, standards, and formal processes"><div class="tag">Protection</div><div class="title">Policies, standards, and formal processes</div><div class="desc">Rules, expectations, procedures, contracts, or formal routes for action.</div></label>
+        <label class="option" data-accent="amber"><input type="checkbox" data-key="senior_allies" value="Senior allies and people with influence"><div class="tag">Influence</div><div class="title">Senior allies and people with influence</div><div class="desc">People with credibility, access, and influence.</div></label>
+        <label class="option" data-accent="amber"><input type="checkbox" data-key="internal_rel" value="Relationships elsewhere in the organization"><div class="tag">Influence</div><div class="title">Relationships elsewhere in the organization</div><div class="desc">People outside your immediate team who know you or your work.</div></label>
+        <label class="option" data-accent="amber"><input type="checkbox" data-key="internal_dev" value="Internal development opportunities"><div class="tag">Leverage</div><div class="title">Internal development opportunities</div><div class="desc">Training, projects, conferences, credentials, or stretch work.</div></label>
+        <label class="option" data-accent="amber"><input type="checkbox" data-key="external_network" value="External professional network"><div class="tag">Mobility</div><div class="title">External professional network</div><div class="desc">Former coworkers, recruiters, associations, and outside contacts.</div></label>
+        <label class="option" data-accent="amber"><input type="checkbox" data-key="portable" value="Portable career assets"><div class="tag">Mobility</div><div class="title">Portable career assets</div><div class="desc">Skills, résumé, profile, portfolio, credentials, and interview stories.</div></label>
+        <label class="option" data-accent="amber"><input type="checkbox" data-key="financial" value="Financial stability and runway"><div class="tag">Stability</div><div class="title">Financial stability and runway</div><div class="desc">Savings, benefits, insurance, income support, or leave.</div></label>
+        <label class="option" data-accent="amber"><input type="checkbox" data-key="support" value="Personal and emotional support"><div class="tag">Support</div><div class="title">Personal and emotional support</div><div class="desc">Family, friends, therapy, medical support, childcare, and practical help.</div></label>
+        <label class="option" data-accent="amber"><input type="checkbox" data-key="capacity" value="Time, energy, and capacity to act"><div class="tag">Capacity</div><div class="title">Time, energy, and capacity to act</div><div class="desc">Enough space, focus, privacy, and energy to follow through.</div></label>
+      </div>
+      <div class="field"><label for="missingMeans">What do you wish you had more of?</label><textarea id="missingMeans" placeholder="Example: better documentation, more runway, a senior ally, or an updated résumé."></textarea></div>
+      <div class="warning" id="meansWarn">Choose at least one resource.</div>
+      <div class="actions"><button class="btn btn-secondary" data-back="ways">Back</button><button class="btn btn-primary" id="meansNext">Next</button></div>
+    </section>
+
+    <section class="screen" id="risk">
+      <div class="eyebrow">Risk</div><h2>What could go wrong?</h2><p class="lede">This is not to scare you. It helps you see what needs protection.</p>
+      <div class="grid" data-group="risk">
+        <label class="option" data-accent="coral"><input type="checkbox" data-key="retaliation" value="Retaliation or more scrutiny"><div class="title">Retaliation or more scrutiny</div><div class="desc">The situation could get tighter after you act.</div></label>
+        <label class="option" data-accent="coral"><input type="checkbox" data-key="relationship" value="Damage to an important relationship"><div class="title">Damage to an important relationship</div><div class="desc">You could lose access, trust, or support you still need.</div></label>
+        <label class="option" data-accent="coral"><input type="checkbox" data-key="access" value="Loss of access, assignments, or opportunities"><div class="title">Loss of access, assignments, or opportunities</div><div class="desc">You could get left out or sidelined.</div></label>
+        <label class="option" data-accent="coral"><input type="checkbox" data-key="formal_fail" value="A formal process may not fix the problem"><div class="title">A formal process may not fix the problem</div><div class="desc">You may create a record without creating change.</div></label>
+        <label class="option" data-accent="coral"><input type="checkbox" data-key="weak_evidence" value="My proof or support may not be strong enough yet"><div class="title">My proof or support may not be strong enough yet</div><div class="desc">The case could still be too easy to dismiss.</div></label>
+        <label class="option" data-accent="coral"><input type="checkbox" data-key="energy" value="This could take too much time and energy"><div class="title">This could take too much time and energy</div><div class="desc">The payoff may not be worth the cost.</div></label>
+        <label class="option" data-accent="coral"><input type="checkbox" data-key="financial_pressure" value="Money pressure could limit my choices"><div class="title">Money pressure could limit my choices</div><div class="desc">Financial pressure could force you to play it safer.</div></label>
+        <label class="option" data-accent="coral"><input type="checkbox" data-key="outside_not_ready" value="My outside options are not ready yet"><div class="title">My outside options are not ready yet</div><div class="desc">You may need more time to build real mobility.</div></label>
+      </div>
+      <div class="field"><label for="customRisk">Another risk</label><input id="customRisk" type="text" placeholder="Add a risk specific to your situation"></div>
+      <div class="field"><label for="riskProtection">What could reduce the biggest risk?</label><textarea id="riskProtection" placeholder="Example: build the record first, strengthen a relationship, or improve runway."></textarea></div>
+      <div class="field"><label for="changeCourse">What would tell you it is time to change course?</label><textarea id="changeCourse" placeholder="Name the signal that would tell you this strategy is not worth continuing."></textarea></div>
+      <div class="actions"><button class="btn btn-secondary" data-back="means">Back</button><button class="btn btn-primary" id="analyzeBtn">Build my plan</button></div>
+    </section>
+
+    <section class="screen" id="review">
+      <div class="eyebrow">Your plan</div><h2>Here is the plain-language read.</h2><p class="lede" id="reviewLede"></p>
+      <div class="review-top">
+        <div class="statement"><h3>Your plan in one sentence</h3><p id="planSentence"></p></div>
+        <div class="scorebox"><h3>How ready this plan looks</h3><div class="meter"><span id="readinessBar" style="width:0%"></span></div><div class="meterlabel" id="readinessLabel"></div></div>
+      </div>
+      <div class="review-grid">
+        <div class="review-card"><div class="minicaps">Main read</div><h3 id="mainReadTitle"></h3><p id="mainReadText"></p></div>
+        <div class="review-card"><div class="minicaps">Best next move</div><h3 id="bestNextTitle"></h3><p id="bestNextText"></p></div>
+        <div class="review-card"><div class="minicaps">Build this first</div><h3 id="buildFirstTitle"></h3><p id="buildFirstText"></p><div class="pills" id="buildPills"></div></div>
+        <div class="review-card"><div class="minicaps">Watch out for this</div><h3 id="watchTitle"></h3><p id="watchText"></p><div class="callout" id="watchCallout" style="display:none"></div></div>
+      </div>
+      <div class="review-grid">
+        <div class="review-card"><div class="minicaps">Suggested order</div><div class="simplelist" id="simpleSequence"></div></div>
+        <div class="review-card"><div class="minicaps">What you already have</div><h3>Strongest assets right now</h3><div class="pills" id="assetPills"></div><details><summary>See a little more detail</summary><div class="callout" style="margin-top:12px;border-left-color:var(--green)" id="detailSummary"></div></details></div>
+      </div>
+      <div class="actions"><button class="btn btn-secondary" data-back="risk">Edit</button><button class="btn btn-primary" onclick="window.print()">Print / Save as PDF</button><button class="btn btn-secondary" id="downloadBtn">Download notes</button><button class="btn btn-ghost" id="restartBtn">Start over</button></div>
+    </section>
+  </section>
+</div>
+<div class="container footer"><span>Fearless Workplace</span><span>Your entries are saved only in your browser on this device.</span></div>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const order=['intro','ends','ways','means','risk','review'];
+
+const meansNames={
+  documentation:'protective documentation',
+  competence:'evidence of your competence and results',
+  policies:'policies or formal processes',
+  senior_allies:'senior allies and people with influence',
+  internal_rel:'relationships elsewhere in the organization',
+  internal_dev:'internal development opportunities',
+  external_network:'an external professional network',
+  portable:'portable career assets',
+  financial:'financial stability and runway',
+  support:'personal and emotional support',
+  capacity:'time, energy, and capacity to act'
+};
+
+const endNeeds={
+  protect:['documentation','competence','internal_rel'],
+  behavior:['documentation','policies'],
+  reputation:['competence','internal_rel','senior_allies'],
+  decision:['documentation','policies','senior_allies'],
+  advance:['competence','senior_allies','internal_dev'],
+  escalate:['documentation','policies','senior_allies'],
+  milestone:['financial','capacity','documentation'],
+  exit:['external_network','portable','financial'],
+  custom:['documentation','capacity']
+};
+
+const goodWays={
+  protect:['document','repway','allies','power'],
+  behavior:['conversation','boundary','document','manageup'],
+  reputation:['repway','document','allies'],
+  decision:['power','manageup','formal','allies'],
+  advance:['repway','internal','allies','power'],
+  escalate:['document','power','formal','allies'],
+  milestone:['document','manageup','internal'],
+  exit:['external','repway','allies'],
+  custom:['document','power','allies']
+};
+
+function show(id){
+  $$('.screen').forEach(x=>x.classList.remove('active'));
+  $('#'+id).classList.add('active');
+  $$('.tab').forEach(t=>{
+    const ix=order.indexOf(t.dataset.nav), cur=order.indexOf(id);
+    t.classList.toggle('active', t.dataset.nav===id);
+  });
+  save();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+$$('[data-next]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.next)));
+$$('[data-back]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.back)));
+$$('.tab').forEach(b=>b.addEventListener('click',()=>show(b.dataset.nav)));
+
+function refreshStyles(){
+  $$('.option').forEach(o=>{
+    const i=o.querySelector('input');
+    o.classList.toggle('selected', !!i.checked);
+  });
+}
+$$('.option input').forEach(i=>i.addEventListener('change',()=>{
+  i.closest('.option').classList.toggle('selected', i.checked);
+  if(i.name==='end') renderPrimaryEndChoices();
+  save();
+}));
+['customEnd','successLooks','customWay','firstAction','missingMeans','customRisk','riskProtection','changeCourse'].forEach(id=>{
+  $('#'+id).addEventListener('input', ()=>{ if(id==='customEnd') renderPrimaryEndChoices(); save(); });
+});
+
+let primaryEndKey='';
+function selectedEnds(){
+  const chosen=$$('input[name="end"]:checked').map(i=>({key:i.dataset.key,text:i.value}));
+  const custom=$('#customEnd').value.trim();
+  if(custom) chosen.push({key:'custom',text:custom});
+  return chosen;
+}
+function renderPrimaryEndChoices(){
+  const chosen=selectedEnds();
+  const box=$('#primaryEndChoices');
+  box.innerHTML='';
+  if(!chosen.length){
+    primaryEndKey='';
+    addPill(box,'Choose one or more goals above','cyan');
+    return;
+  }
+  if(chosen.length===1){
+    primaryEndKey=chosen[0].key;
+  } else if(!chosen.some(x=>x.key===primaryEndKey)){
+    primaryEndKey='';
+  }
+  chosen.forEach(item=>{
+    const b=document.createElement('button');
+    b.type='button';
+    b.className='primary-choice'+(item.key===primaryEndKey?' active':'');
+    b.textContent=item.text;
+    b.addEventListener('click',()=>{ primaryEndKey=item.key; renderPrimaryEndChoices(); save(); });
+    box.appendChild(b);
+  });
+}
+function endSelection(){
+  const chosen=selectedEnds();
+  if(!chosen.length) return {key:'',text:'',secondary:[]};
+  if(chosen.length===1) primaryEndKey=chosen[0].key;
+  const primary=chosen.find(x=>x.key===primaryEndKey) || null;
+  return { key:primary?.key||'', text:primary?.text||'', secondary:chosen.filter(x=>x.key!==primaryEndKey) };
+}
+function checkedKeys(group){ return $$(`[data-group="${group}"] input:checked`).map(i=>i.dataset.key); }
+function checkedValues(group){ return $$(`[data-group="${group}"] input:checked`).map(i=>i.value); }
+
+$('#endsNext').addEventListener('click',()=>{
+  const chosen=selectedEnds();
+  if(!chosen.length){ $('#endWarn').textContent='Choose at least one goal or write your own.'; $('#endWarn').style.display='block'; return; }
+  if(chosen.length>1 && !endSelection().text){ $('#endWarn').textContent='Choose which goal is the main one right now.'; $('#endWarn').style.display='block'; return; }
+  $('#endWarn').style.display='none'; show('ways');
+});
+$('#waysNext').addEventListener('click',()=>{
+  if(!checkedKeys('ways').length && !$('#customWay').value.trim()){ $('#waysWarn').style.display='block'; return; }
+  $('#waysWarn').style.display='none'; show('means');
+});
+$('#meansNext').addEventListener('click',()=>{
+  if(!checkedKeys('means').length){ $('#meansWarn').style.display='block'; return; }
+  $('#meansWarn').style.display='none'; show('risk');
+});
+
+function addPill(container, text, cls=''){
+  const s=document.createElement('span');
+  s.className='pill '+cls;
+  s.textContent=text;
+  container.appendChild(s);
+}
+function addSimple(container, n, title, text){
+  const d=document.createElement('div');
+  d.className='simpleitem';
+  d.innerHTML=`<div class="num">${n}</div><div><h4>${title}</h4><p>${text}</p></div>`;
+  container.appendChild(d);
+}
+function prettyList(arr){
+  if(!arr.length) return '';
+  if(arr.length===1) return arr[0];
+  if(arr.length===2) return arr[0]+' and '+arr[1];
+  return arr.slice(0,-1).join(', ')+', and '+arr[arr.length-1];
+}
+function unique(arr){ return [...new Set(arr)]; }
+
+function analyze(){
+  const end=endSelection();
+  const secondaryEnds=end.secondary || [];
+  const ways=checkedKeys('ways');
+  const waysText=checkedValues('ways');
+  const means=checkedKeys('means');
+  const risks=checkedKeys('risk');
+  const customWay=$('#customWay').value.trim();
+  const success=$('#successLooks').value.trim();
+  const firstAction=$('#firstAction').value.trim();
+  const missingWish=$('#missingMeans').value.trim();
+  const customRisk=$('#customRisk').value.trim();
+  const riskProtection=$('#riskProtection').value.trim();
+  const changeCourse=$('#changeCourse').value.trim();
+
+  const needs=endNeeds[end.key] || endNeeds.custom;
+  const preferred=goodWays[end.key] || goodWays.custom;
+  const missing=needs.filter(k=>!means.includes(k));
+  const aligned=ways.filter(k=>preferred.includes(k));
+  const supportingNeeds=unique(secondaryEnds.flatMap(x=>endNeeds[x.key] || endNeeds.custom)).filter(k=>!needs.includes(k));
+  const supportingMissing=supportingNeeds.filter(k=>!means.includes(k));
+
+  let score=48;
+  score += Math.min(aligned.length*8,24);
+  score += Math.max(0,(needs.length-missing.length))*6;
+  if(success) score += 6;
+  if(firstAction) score += 6;
+  if(ways.length>4) score -= 10;
+  if(ways.includes('formal') && !means.includes('documentation')) score -= 14;
+  if(risks.includes('retaliation') && !means.includes('documentation')) score -= 8;
+  if(end.key==='exit' && (!means.includes('external_network') || !means.includes('portable'))) score -= 8;
+  if(end.key==='advance' && !means.includes('senior_allies')) score -= 7;
+  if(end.key==='reputation' && !means.includes('competence')) score -= 7;
+  score=Math.max(20,Math.min(95,score));
+
+  const planBits=[];
+  if(end.text) planBits.push('Your main goal is to '+end.text.toLowerCase());
+  if(secondaryEnds.length) planBits.push('while also trying to '+prettyList(secondaryEnds.map(x=>x.text.toLowerCase())));
+  const wayBits=[...waysText];
+  if(customWay) wayBits.push(customWay);
+  if(wayBits.length) planBits.push('using '+prettyList(wayBits).toLowerCase());
+  const assetList=unique(needs.filter(k=>means.includes(k)).concat(means)).slice(0,4).map(k=>meansNames[k]);
+  if(assetList.length) planBits.push('with '+prettyList(assetList));
+  $('#planSentence').textContent = planBits.join(', ') + '.';
+  $('#reviewLede').textContent = secondaryEnds.length ? 'This read treats “'+end.text+'” as the main goal and the other selected goals as supporting goals.' : 'This read is based on the goal, routes, resources, and risks you chose.';
+
+  let mainTitle='', mainText='';
+  if(ways.length>4){
+    mainTitle='Your plan is trying to do too much.';
+    mainText='You picked a lot of routes. That usually means the plan is getting fuzzy. Narrow it down so the actions clearly match the goal.';
+  } else if(missing.length>=2){
+    mainTitle='The goal is fine. The support is weak.';
+    mainText='You know what you want, but the plan is missing some of the things that would normally make this kind of strategy stronger.';
+  } else if(ways.includes('formal') && !means.includes('documentation')){
+    mainTitle='You are moving toward action without enough protection.';
+    mainText='If you want to use a formal process, the record matters. Right now the plan looks more exposed than it needs to be.';
+  } else if(aligned.length===0 && ways.length){
+    mainTitle='Your routes do not match the goal very well.';
+    mainText='The things you picked may all be useful in general, but they are not the clearest match for the result you want.';
+  } else {
+    mainTitle='This has the shape of a real strategy.';
+    mainText='The goal, the routes, and the resources are reasonably connected. The next step is doing this in the right order.';
+  }
+  $('#mainReadTitle').textContent=mainTitle;
+  $('#mainReadText').textContent=mainText;
+
+  let nextTitle='', nextText='';
+  if(firstAction){
+    nextTitle='Start with the action you named.';
+    nextText=firstAction;
+  } else if(missing.length){
+    nextTitle='Build the weak spot first.';
+    nextText='Before you push harder, strengthen '+meansNames[missing[0]]+'.';
+  } else if(aligned.length){
+    const label = $$('[data-group="ways"] input').find(i=>i.dataset.key===aligned[0])?.value || 'the clearest route';
+    nextTitle='Start with the clearest route.';
+    nextText=label + '.';
+  } else {
+    nextTitle='Pick one route and simplify.';
+    nextText='Choose the route that most directly serves the goal instead of reacting to the loudest problem.';
+  }
+  $('#bestNextTitle').textContent=nextTitle;
+  $('#bestNextText').textContent=nextText;
+
+  let buildTitle='', buildText='';
+  if(missing.length){
+    buildTitle='These are your main gaps.';
+    buildText='These are the pieces most likely to strengthen this plan.';
+  } else if(missingWish){
+    buildTitle='You already know what would help.';
+    buildText=missingWish;
+  } else {
+    buildTitle='No major gap jumps out.';
+    buildText='That does not mean the plan is perfect. It means the next job is execution and follow-through.';
+  }
+  $('#buildFirstTitle').textContent=buildTitle;
+  $('#buildFirstText').textContent=buildText;
+  const buildPills=$('#buildPills');
+  buildPills.innerHTML='';
+  missing.forEach(k=>addPill(buildPills, meansNames[k], 'amber'));
+  if(!missing.length && missingWish) addPill(buildPills, missingWish, 'amber');
+  supportingMissing.slice(0,2).forEach(k=>addPill(buildPills, meansNames[k]+' (supports another goal)', 'violet'));
+
+  let watchTitle='', watchText='', watchExtra='';
+  if(risks.length || customRisk){
+    watchTitle='Do not ignore the main exposure.';
+    const riskPhrases=[];
+    if(risks.includes('retaliation')) riskPhrases.push('retaliation or more scrutiny');
+    if(risks.includes('weak_evidence')) riskPhrases.push('acting before the proof is strong enough');
+    if(risks.includes('financial_pressure')) riskPhrases.push('money pressure');
+    if(risks.includes('outside_not_ready')) riskPhrases.push('outside options that are not ready yet');
+    if(risks.includes('energy')) riskPhrases.push('spending more time and energy than this is worth');
+    if(risks.includes('relationship')) riskPhrases.push('damaging a relationship you still need');
+    if(risks.includes('access')) riskPhrases.push('losing access or opportunity');
+    if(risks.includes('formal_fail')) riskPhrases.push('a formal process that creates a record but not a fix');
+    if(customRisk) riskPhrases.push(customRisk);
+    watchText='The biggest things to watch are '+prettyList(riskPhrases)+'.';
+    watchExtra = riskProtection || changeCourse || '';
+  } else {
+    watchTitle='You did not identify a risk.';
+    watchText='That usually means the plan needs one more pass. Every strategy costs something.';
+  }
+  $('#watchTitle').textContent=watchTitle;
+  $('#watchText').textContent=watchText;
+  const wc=$('#watchCallout');
+  if(watchExtra){ wc.style.display='block'; wc.textContent='Helpful note: '+watchExtra; }
+  else { wc.style.display='none'; wc.textContent=''; }
+
+  const seq=$('#simpleSequence');
+  seq.innerHTML='';
+  let n=1;
+  if(missing.length){
+    addSimple(seq,n++,'Build the missing support','Strengthen '+prettyList(missing.slice(0,2).map(k=>meansNames[k]))+' before the highest-risk action.');
+  } else {
+    addSimple(seq,n++,'Use what you already have','You already have some of the main supports this plan needs.');
+  }
+  if(end.key==='exit'){
+    addSimple(seq,n++,'Increase your outside options','Use your network, résumé, profile, portfolio, and other portable assets before urgency forces a rushed exit.');
+  } else if(end.key==='escalate'){
+    addSimple(seq,n++,'Make the case easy to follow','Get clear on the issue, the impact, the proof, what you have already tried, and what you want done.');
+  } else if(end.key==='advance'){
+    addSimple(seq,n++,'Turn your work into visibility','Use your results, relationships, and development opportunities to improve your position.');
+  } else if(end.key==='reputation'){
+    addSimple(seq,n++,'Create an independent story of your value','Make sure other people can see your work and results for themselves.');
+  } else {
+    addSimple(seq,n++,'Take the clearest route','Use the route that best fits the goal instead of trying everything at once.');
+  }
+  addSimple(seq,n++,'Watch for the signal to adjust', changeCourse || 'Decide now what would tell you this plan is not working so you do not keep repeating it forever.');
+
+  const assets=$('#assetPills');
+  assets.innerHTML='';
+  assetList.forEach((a,i)=>addPill(assets,a, i===0?'cyan':i===1?'violet':i===2?'amber':'green'));
+  if(!assetList.length) addPill(assets,'no clear assets selected','coral');
+
+  let detail='';
+  if(success) detail+='Success looks like: '+success+' ';
+  if(changeCourse) detail+='Change-course signal: '+changeCourse;
+  if(!detail) detail='The cleaner your definition of success, the easier it is to tell whether the plan is working.';
+  $('#detailSummary').textContent=detail;
+
+  $('#readinessBar').style.width=score+'%';
+  let readiness='';
+  if(score>=75) readiness='This looks fairly solid. It still needs follow-through, but the pieces fit.';
+  else if(score>=55) readiness='This is usable, but it has a few weak spots. Tighten those before you push harder.';
+  else readiness='This plan looks exposed. Build more support before you lean on the riskiest part of it.';
+  $('#readinessLabel').textContent=readiness;
+
+  save();
+}
+
+$('#analyzeBtn').addEventListener('click',()=>{ analyze(); show('review'); });
+
+function collect(){
+  return {
+    screen: $$('.screen').find(s=>s.classList.contains('active'))?.id || 'intro',
+    ends: $$('input[name="end"]:checked').map(i=>i.value),
+    primaryEndKey: primaryEndKey,
+    customEnd: $('#customEnd').value,
+    successLooks: $('#successLooks').value,
+    ways: checkedKeys('ways'),
+    customWay: $('#customWay').value,
+    firstAction: $('#firstAction').value,
+    means: checkedKeys('means'),
+    missingMeans: $('#missingMeans').value,
+    risk: checkedKeys('risk'),
+    customRisk: $('#customRisk').value,
+    riskProtection: $('#riskProtection').value,
+    changeCourse: $('#changeCourse').value
+  };
+}
+function save(){
+  try{ localStorage.setItem('fw_strategy_v3', JSON.stringify(collect())); }catch(e){}
+}
+function restore(){
+  try{
+    const raw=localStorage.getItem('fw_strategy_v3');
+    if(!raw) return false;
+    const s=JSON.parse(raw);
+    (s.ends||[]).forEach(v=>{
+      const r=$$('input[name="end"]').find(i=>i.value===v);
+      if(r) r.checked=true;
+    });
+    primaryEndKey=s.primaryEndKey||'';
+    $('#customEnd').value=s.customEnd||'';
+    $('#successLooks').value=s.successLooks||'';
+    $('#customWay').value=s.customWay||'';
+    $('#firstAction').value=s.firstAction||'';
+    $('#missingMeans').value=s.missingMeans||'';
+    $('#customRisk').value=s.customRisk||'';
+    $('#riskProtection').value=s.riskProtection||'';
+    $('#changeCourse').value=s.changeCourse||'';
+    (s.ways||[]).forEach(k=>{ const i=$$('[data-group="ways"] input').find(x=>x.dataset.key===k); if(i) i.checked=true; });
+    (s.means||[]).forEach(k=>{ const i=$$('[data-group="means"] input').find(x=>x.dataset.key===k); if(i) i.checked=true; });
+    (s.risk||[]).forEach(k=>{ const i=$$('[data-group="risk"] input').find(x=>x.dataset.key===k); if(i) i.checked=true; });
+    refreshStyles();
+    renderPrimaryEndChoices();
+    return true;
+  } catch(e){ return false; }
+}
+if(restore()) $('#resumeBtn').style.display='inline-block';
+else renderPrimaryEndChoices();
+$('#resumeBtn').addEventListener('click',()=>{
+  const raw=localStorage.getItem('fw_strategy_v3');
+  let target='ends';
+  try{ const s=JSON.parse(raw); if(s.screen && s.screen!=='intro') target=s.screen; }catch(e){}
+  if(target==='review') analyze();
+  show(target);
+});
+$('#restartBtn').addEventListener('click',()=>{
+  if(confirm('Clear this plan and start over?')){
+    localStorage.removeItem('fw_strategy_v3');
+    location.reload();
+  }
+});
+$('#downloadBtn').addEventListener('click',()=>{
+  analyze();
+  const txt=[
+    'FEARLESS WORKPLACE — STRATEGY 30',
+    'BUILD YOUR STRATEGY',
+    '',
+    'YOUR PLAN IN ONE SENTENCE',
+    $('#planSentence').textContent,
+    '',
+    'MAIN READ',
+    $('#mainReadTitle').textContent,
+    $('#mainReadText').textContent,
+    '',
+    'BEST NEXT MOVE',
+    $('#bestNextTitle').textContent,
+    $('#bestNextText').textContent,
+    '',
+    'BUILD THIS FIRST',
+    $('#buildFirstTitle').textContent,
+    $('#buildFirstText').textContent,
+    '',
+    'WATCH OUT FOR THIS',
+    $('#watchTitle').textContent,
+    $('#watchText').textContent,
+    $('#watchCallout').style.display!=='none' ? $('#watchCallout').textContent : '',
+    '',
+    'HOW READY IT LOOKS',
+    $('#readinessLabel').textContent
+  ].filter(Boolean).join('\\n');
+  const blob=new Blob([txt],{type:'text/plain'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download='Fearless_Workplace_Strategy_Plan.txt'; a.click();
+  URL.revokeObjectURL(url);
+});
+</script>
+</body>
+</html>
